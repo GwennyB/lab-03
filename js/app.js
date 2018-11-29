@@ -8,9 +8,9 @@ function Animal(animal) {
   this.horns = animal.horns;
   this.page = 0;
 }
-
 Animal.pageOneAnimals = [];
 Animal.pageTwoAnimals = [];
+Animal.allAnimals = [];
 
 Animal.readJson = () => {
   $.get('data/page-1.json','json')
@@ -18,6 +18,7 @@ Animal.readJson = () => {
       data.forEach(animal => {
         let thisAnimal = new Animal(animal);
         Animal.pageOneAnimals.push(thisAnimal);
+        Animal.allAnimals = Animal.pageOneAnimals;
       })
     })
   $.get('data/page-2.json','json')
@@ -31,9 +32,9 @@ Animal.readJson = () => {
 };
 
 Animal.loadAnimals = () => {
-  Animal.pageOneAnimals.sort( (a,b) => a.title.localeCompare(b.title) )
+  Animal.allAnimals.sort( (a,b) => a.title.localeCompare(b.title) )
   let keywordsList = ['Show All Animals'];
-  Animal.pageOneAnimals.forEach( animal => {
+  Animal.allAnimals.forEach( animal => {
     animal.render();
     if (!keywordsList.includes(animal.keyword)) {
       keywordsList.push(animal.keyword);
@@ -42,7 +43,7 @@ Animal.loadAnimals = () => {
   Animal.makeList(keywordsList);
   Animal.keyFilter();
   Animal.sortAnimals();
-  // Animal.pageSelect();
+  Animal.pageSelect();
 };
 
 Animal.prototype.toHtml = function() {
@@ -73,13 +74,11 @@ Animal.keyFilter = () => {
     $('main').empty();
     const chosen = [];
     let keyValue = $(this).val();
-    console.log('keyvalue', keyValue);
-    Animal.pageOneAnimals.forEach(animal => {
+    Animal.allAnimals.forEach(animal => {
       if(animal.keyword === keyValue || keyValue === 'Show All Animals'){
         chosen.push(animal);
       }
     })
-    console.log('chosen: ',chosen);
     chosen.forEach( animal => animal.render());
   });
 };
@@ -89,13 +88,13 @@ Animal.sortAnimals = () => {
     event.preventDefault();
     let sortValue = $(this).val();
     if(sortValue === 'horns') {
-      Animal.pageOneAnimals.sort( (a,b) => a.horns-b.horns);
+      Animal.allAnimals.sort( (a,b) => a.horns-b.horns);
     } else {
-      Animal.pageOneAnimals.sort( (a,b) => a.title.localeCompare(b.title) );
+      Animal.allAnimals.sort( (a,b) => a.title.localeCompare(b.title) );
     }
     $('main').empty();
     let keywordsList = ['Show All Animals'];
-    Animal.pageOneAnimals.forEach( animal => {
+    Animal.allAnimals.forEach( animal => {
       animal.render();
       if (!keywordsList.includes(animal.keyword)) {
         keywordsList.push(animal.keyword);
@@ -104,6 +103,20 @@ Animal.sortAnimals = () => {
   })
 };
 
+Animal.pageSelect = () => {
+  $('.prev').on('click', function(event) {
+    event.preventDefault();
+    Animal.allAnimals = Animal.pageOneAnimals;
+    $('main').empty();
+    Animal.loadAnimals();
+  })
+  $('.next').on('click', function(event) {
+    event.preventDefault();
+    Animal.allAnimals = Animal.pageTwoAnimals;
+    $('main').empty();
+    Animal.loadAnimals();
+  })
 
+};
 
 $(() => Animal.readJson());
