@@ -18,10 +18,18 @@ Animal.readJson = () => {
         Animal.allAnimals.push(thisAnimal);
       })
     })
+  $.get('data/page-2.json','json')
+    .then(data => {
+      data.forEach(animal => {
+        let thisAnimal = new Animal(animal);
+        Animal.allAnimals.push(thisAnimal);
+      })
+    })
     .then(Animal.loadAnimals)
 };
 
 Animal.loadAnimals = () => {
+  Animal.allAnimals.sort( (a,b) => a.title.localeCompare(b.title) )
   let keywordsList = ['Show All Animals'];
   Animal.allAnimals.forEach( animal => {
     animal.render();
