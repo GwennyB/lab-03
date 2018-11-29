@@ -70,7 +70,7 @@ Animal.makeList = function(keywordsList) {
 Animal.keyFilter = () => {
   $('.keyfilter').on('change',function(event){
     event.preventDefault();
-    Animal.clearRender();
+    $('section').hide();
     const chosen = [];
     let keyValue = $(this).val();
     console.log('keyvalue', keyValue);
@@ -79,6 +79,7 @@ Animal.keyFilter = () => {
         chosen.push(animal);
       }
     })
+    console.log('chosen: ',chosen);
     chosen.forEach( animal => animal.render());
   });
 };
@@ -90,15 +91,19 @@ Animal.sortAnimals = () => {
     if(sortValue === 'horns') {
       Animal.pageOneAnimals.sort( (a,b) => a.horns-b.horns);
     } else {
-      Animal.pageOneAnimals.sort( (a,b) => a.title.localeCompare(b.title) )
+      Animal.pageOneAnimals.sort( (a,b) => a.title.localeCompare(b.title) );
     }
-    window.reload();
+    $('main').empty();
+    let keywordsList = ['Show All Animals'];
+    Animal.pageOneAnimals.forEach( animal => {
+      animal.render();
+      if (!keywordsList.includes(animal.keyword)) {
+        keywordsList.push(animal.keyword);
+      }
+    });
   })
 };
 
-Animal.clearRender = () => {
-  $('section').hide();
-};
 
 
 $(() => Animal.readJson());
