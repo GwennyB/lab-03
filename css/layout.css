@@ -1,5 +1,15 @@
+body {
+  width: 95vw;
+}
+
 main {
   margin-left: 100px;
+  max-height: 2500px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column wrap;
+  align-content: space-around;
 }
 
 select {
@@ -24,10 +34,13 @@ section {
   box-sizing: border-box;
   width: 300px;
   height: 400px;
-  float: left;
+  /* float: left; */
   box-sizing: border-box;
   margin: 15px;
   border: 2px solid darkslategray;
+  /* display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap; */
 }
 
 section h2 {
