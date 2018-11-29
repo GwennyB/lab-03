@@ -6,32 +6,34 @@ function Animal(animal) {
   this.description = animal.description;
   this.keyword = animal.keyword;
   this.horns = animal.horns;
+  this.page = 0;
 }
 
-Animal.allAnimals = [];
+Animal.pageOneAnimals = [];
+Animal.pageTwoAnimals = [];
 
 Animal.readJson = () => {
   $.get('data/page-1.json','json')
     .then(data => {
       data.forEach(animal => {
         let thisAnimal = new Animal(animal);
-        Animal.allAnimals.push(thisAnimal);
+        Animal.pageOneAnimals.push(thisAnimal);
       })
     })
   $.get('data/page-2.json','json')
     .then(data => {
       data.forEach(animal => {
         let thisAnimal = new Animal(animal);
-        Animal.allAnimals.push(thisAnimal);
+        Animal.pageTwoAnimals.push(thisAnimal);
       })
     })
     .then(Animal.loadAnimals)
 };
 
 Animal.loadAnimals = () => {
-  Animal.allAnimals.sort( (a,b) => a.title.localeCompare(b.title) )
+  Animal.pageOneAnimals.sort( (a,b) => a.title.localeCompare(b.title) )
   let keywordsList = ['Show All Animals'];
-  Animal.allAnimals.forEach( animal => {
+  Animal.pageOneAnimals.forEach( animal => {
     animal.render();
     if (!keywordsList.includes(animal.keyword)) {
       keywordsList.push(animal.keyword);
@@ -39,6 +41,8 @@ Animal.loadAnimals = () => {
   });
   Animal.makeList(keywordsList);
   Animal.keyFilter();
+  Animal.sortAnimals();
+  // Animal.pageSelect();
 };
 
 Animal.prototype.render = function() {
@@ -70,13 +74,26 @@ Animal.keyFilter = () => {
     const chosen = [];
     let keyValue = $(this).val();
     console.log('keyvalue', keyValue);
-    Animal.allAnimals.forEach(animal => {
+    Animal.pageOneAnimals.forEach(animal => {
       if(animal.keyword === keyValue || keyValue === 'Show All Animals'){
         chosen.push(animal);
       }
     })
     chosen.forEach( animal => animal.render());
   });
+};
+
+Animal.sortAnimals = () => {
+  $('.sortoptions').on('change',function(event){
+    event.preventDefault();
+    let sortValue = $(this).val();
+    if(sortValue === 'horns') {
+      Animal.pageOneAnimals.sort( (a,b) => a.horns-b.horns);
+    } else {
+      Animal.pageOneAnimals.sort( (a,b) => a.title.localeCompare(b.title) )
+    }
+    window.reload();
+  })
 };
 
 Animal.clearRender = () => {
