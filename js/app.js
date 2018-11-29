@@ -45,17 +45,17 @@ Animal.loadAnimals = () => {
   // Animal.pageSelect();
 };
 
-Animal.prototype.render = function() {
-  $('main').append('<section class="clone"></section>');
-  let animalClone = $('section[class="clone"]');
-  let animalHtml = $('#photo-template').html();
-  animalClone.html(animalHtml);
+Animal.prototype.toHtml = function() {
+  // STEP 1: Get the template from the HTML document
+  const $template = $('#animal-template').html(); // for coder recognition that expected value is a jQuery object
+  // STEP 2: compile the template to regular HTML
+  const $source = Handlebars.compile($template); // fill blank Handlebars template with actual template
+  // STEP 3: return the compiled template
+  return $source(this); // allows chaining with template as 'this'
+};
 
-  animalClone.find('h2').text(this.title);
-  animalClone.find('img').attr('src', this.image_url);
-  animalClone.find('p').text(this.description);
-  animalClone.removeClass('clone');
-  animalClone.attr('class', this.keyword);
+Animal.prototype.render = function() {
+  $('main').append(this.toHtml());
 }
 
 Animal.makeList = function(keywordsList) {
@@ -70,7 +70,7 @@ Animal.makeList = function(keywordsList) {
 Animal.keyFilter = () => {
   $('.keyfilter').on('change',function(event){
     event.preventDefault();
-    $('section').hide();
+    $('main').empty();
     const chosen = [];
     let keyValue = $(this).val();
     console.log('keyvalue', keyValue);
