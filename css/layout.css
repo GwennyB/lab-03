@@ -11,6 +11,15 @@ header {
   text-align: center;
 }
 
+div h3 {
+  float: left;
+  width: 200px;
+}
+
+main {
+  clear: both;
+}
+
 section {
   box-sizing: border-box;
   width: 300px;
