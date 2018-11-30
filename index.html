@@ -12,10 +12,8 @@
     <script id="animal-template" type="text/x-handlebars-template">
       <section class={{ title }}>
         <h2>{{ title }}</h2>
-        <div>
-          <img src={{ image_url }} alt="">
-        </div>
-        <p>{{ description }}</p>
+        <img src={{ image_url }} alt="image of {{ title }}" title="{{ description }}">
+        <!-- <p>{{ description }}</p> -->
       </section>
     </script>
   </head>

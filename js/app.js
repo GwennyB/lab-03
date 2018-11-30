@@ -47,12 +47,9 @@ Animal.loadAnimals = () => {
 };
 
 Animal.prototype.toHtml = function() {
-  // STEP 1: Get the template from the HTML document
-  const $template = $('#animal-template').html(); // for coder recognition that expected value is a jQuery object
-  // STEP 2: compile the template to regular HTML
-  const $source = Handlebars.compile($template); // fill blank Handlebars template with actual template
-  // STEP 3: return the compiled template
-  return $source(this); // allows chaining with template as 'this'
+  const $template = $('#animal-template').html();
+  const $source = Handlebars.compile($template);
+  return $source(this);
 };
 
 Animal.prototype.render = function() {
@@ -60,6 +57,7 @@ Animal.prototype.render = function() {
 }
 
 Animal.makeList = function(keywordsList) {
+  $('.keyfilter').empty();
   keywordsList.forEach ( animal => {
     $('.keyfilter').append('<option class="clone"></option>');
     $('option[class="clone"]').text(animal);
